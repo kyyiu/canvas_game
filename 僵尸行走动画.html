@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+			html,body,canvas{
+				margin: 0;
+				padding: 0;
+			}
+			#canv{
+				display: block;
+				background-color: #1D7DB1;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="canv" width="400" height="400"></canvas>
+		<script type="text/javascript">
+			let canvas = document.querySelector('#canv')
+			let draw = canvas.getContext('2d')
+			let img = new Image()
+			img.src = "./walkingdead.png"
+			let step = 0
+			img.onload = function(){
+				// 想着不用onload函数，先把所有图片加载完再去绘制，但是我犯了一个错误，在创建一个image对象后，因为我需要对图片的宽度进行操作，就是img.width = img.width/2，但是我把这代码直接写在了var img = new Image()的下面，然后怎么弄图片都绘制不到画布上。原因是什么呢？是因为应该把给图片宽度重新赋值的操作放到onload方法里面。
+				// 重点来了，图片加载完成之后，对image对象的宽度进行操作是OK的，但是图片还未加载完成，img.width为0，如果进行img.width = img.width/2的操作，那图片的宽度是不是就为0了。这样即使图片已经被加载完，但是没有宽度，绘制到画布上当然看不到了，何况我使用drawImage()方法绘制的时候指定的图片宽度为Image对象自身的宽度。
+				let w = img.width/10
+				// img 后面四个参数是在img图上裁剪的参数，后四个是画布上显示的参数
+				draw.drawImage(img,0,0,w,312,80,50,w,312)
+				setInterval(()=>{
+					step++
+					step == 10?step = 0:null,
+					draw.clearRect(0,0,400,400)
+					draw.drawImage(img,w*step,0,w,312,80,50,w,312)
+				},40)
+			}
+			
+			
+		</script>
+	</body>
+</html>
